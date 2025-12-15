@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Someone Wants to Chat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f0f14;
+      color: #ffffff;
+    }
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 16px;
+      text-align: center;
+    }
+    .hero img {
+      width: 100%;
+      border-radius: 12px;
+    }
+    h1 {
+      font-size: 26px;
+      margin: 16px 0 8px;
+      line-height: 1.2;
+    }
+    p {
+      font-size: 16px;
+      color: #d0d0d5;
+      margin: 8px 0 20px;
+    }
+    .cta {
+      display: block;
+      background: linear-gradient(135deg, #ff4d6d, #ff7a18);
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 14px 0;
+      border-radius: 10px;
+    }
+    .trust {
+      font-size: 12px;
+      color: #9a9aa3;
+      margin-top: 12px;
+    }
+  </style>
+
+  <script>
+    function goOffer() {
+      var rand = Math.random();
+      var clickId = new URLSearchParams(window.location.search).get('click_id') || '';
+
+      if (rand < 0.5) {
+        window.location.href = "https://flowbox.hotrk0.com/offer?offer_id=145586&aff_id=295&aff_sub=" + clickId + "&aff_pub=bigo_male";
+      } else {
+        window.location.href = "https://flowbox.hotrk0.com/offer?offer_id=128524&aff_id=295&aff_sub=" + clickId + "&aff_pub=bigo_male";
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <!-- Replace image URL with your own hosted image -->
+      <img src="https://via.placeholder.com/420x520.png?text=Someone+Wants+to+Chat" alt="chat" />
+    </div>
+
+    <h1>Someone Wants to Chat With You Tonight</h1>
+    <p>Real profiles. Free sign up. No credit card required.</p>
+
+    <a href="javascript:void(0);" class="cta" onclick="goOffer()">Continue</a>
+
+    <div class="trust">
+      18+ only · Online now · Limited spots
+    </div>
+  </div>
+</body>
+</html>
