@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="css/css.css">
 
 <style>
-body { font-family: Arial, sans-serif; }
+body { font-family: Arial, sans-serif; margin:0; }
 .hero {
   background-image:url("images/AM_Affiliate_DarkBG.jpg");
   background-size:cover;
@@ -48,15 +48,14 @@ input[type=email]{
 
 <body>
 
-<!-- HERO -->
+<!-- DESKTOP -->
 <section class="hero center desktop">
   <img src="images/ashley-logo-wt.png" style="max-width:280px;margin-bottom:30px;">
   <h1>Find A Discreet Hookup!</h1>
   <p>Join millions of people exploring like-minded, discreet dating.</p>
 
-  <form onsubmit="return handleCPLSubmit();">
-    <input type="email" id="email" placeholder="Enter your email" required>
-    <br>
+  <form onsubmit="return handleCPLSubmit(this);">
+    <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit" class="btn-gradient">Join Free</button>
   </form>
 
@@ -73,8 +72,8 @@ input[type=email]{
   <h2>Find A Discreet Hookup!</h2>
   <p>Discreet dating starts here.</p>
 
-  <form onsubmit="return handleCPLSubmit();">
-    <input type="email" placeholder="Enter your email" required>
+  <form onsubmit="return handleCPLSubmit(this);">
+    <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit" class="btn-gradient">Join Free</button>
   </form>
 </section>
@@ -89,17 +88,18 @@ input[type=email]{
 <script>
 var OFFER_URL = "https://flowbox.hotrk0.com/offer?offer_id=128524&aff_id=295&aff_sub=[click_id]&aff_pub=[source]&advertising_id=[advertising_id]&idfa=[idfa]";
 
-function handleCPLSubmit(){
-  var email = document.querySelector("input[type='email']").value;
-  if(!email){
+function handleCPLSubmit(form){
+  var emailInput = form.querySelector("input[type='email']");
+
+  if(!emailInput || !emailInput.value.trim()){
     alert("Please enter a valid email address.");
     return false;
   }
 
-  // 给 Bigo 记录 CPL 的时间
+  // 给 Bigo 记录 CPL 行为（非常重要）
   setTimeout(function(){
     window.location.href = OFFER_URL;
-  },800);
+  }, 800);
 
   return false;
 }
