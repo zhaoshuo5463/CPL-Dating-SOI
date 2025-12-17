@@ -44,6 +44,45 @@ input[type=email]{
   .hero{padding:40px 15px;}
 }
 </style>
+
+<!-- ======================
+     配置区（只动这里）
+====================== -->
+<script>
+/* 1️⃣ 是否启用 Bigo Pixel */
+var ENABLE_BIGOPIXEL = false;
+
+/* 2️⃣ Bigo Pixel ID（后台复制） */
+var BIGO_PIXEL_ID = "YOUR_PIXEL_ID";
+
+/* 3️⃣ Offer 链接（自动拼 click_id） */
+var OFFER_BASE_URL =
+  "https://flowbox.hotrk0.com/offer?offer_id=128524&aff_id=295&aff_pub=[source]&advertising_id=[advertising_id]&idfa=[idfa]";
+</script>
+
+<!-- ======================
+     Bigo Pixel 基础代码（预埋）
+====================== -->
+<script>
+(function(){
+  if(!ENABLE_BIGOPIXEL) return;
+
+  !function (w, d, t) {
+    w.BigoAnalyticsObject = t;
+    var fn = w[t] = w[t] || function () {
+      (w[t].q = w[t].q || []).push(arguments)
+    };
+    var s = d.createElement('script');
+    s.async = 1;
+    s.src = 'https://analytics.adsbigo.com/pixel/sdk.js';
+    var x = d.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
+  }(window, document, 'bigo');
+
+  bigo('init', BIGO_PIXEL_ID);
+})();
+</script>
+
 </head>
 
 <body>
@@ -58,12 +97,6 @@ input[type=email]{
     <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit" class="btn-gradient">Join Free</button>
   </form>
-
-  <p style="margin-top:15px;">
-    Already a member?
-    <a href="https://flowbox.hotrk0.com/offer?offer_id=128524&aff_id=295&aff_sub=[click_id]&aff_pub=[source]&advertising_id=[advertising_id]&idfa=[idfa]"
-       style="color:#fff;text-decoration:underline;">Log in</a>
-  </p>
 </section>
 
 <!-- MOBILE -->
@@ -78,27 +111,57 @@ input[type=email]{
   </form>
 </section>
 
-<!-- FOOTER -->
 <footer class="center" style="padding:30px 15px;font-size:12px;color:#666;">
   <img src="images/ashley-logo-bk.png" style="max-width:200px;margin-bottom:15px;">
-  <p>© 2001–2018 Ruby Life Inc. – Official Ashley Madison Website</p>
+  <p>© 2001–2018 Ruby Life Inc.</p>
 </footer>
 
-<!-- CPL + OFFER SCRIPT -->
+<!-- ======================
+     CPL / ClickID / 防重复逻辑
+====================== -->
 <script>
-var OFFER_URL = "https://flowbox.hotrk0.com/offer?offer_id=128524&aff_id=295&aff_sub=[click_id]&aff_pub=[source]&advertising_id=[advertising_id]&idfa=[idfa]";
+/* 读取 URL 参数 */
+function getParam(name){
+  var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+/* 获取 Bigo click_id */
+var CLICK_ID = getParam("click_id") || "";
+
+/* 防重复：本地已提交标记 */
+var CPL_LOCK_KEY = "cpl_submitted";
 
 function handleCPLSubmit(form){
-  var emailInput = form.querySelector("input[type='email']");
+  /* 防止重复提交 */
+  if(localStorage.getItem(CPL_LOCK_KEY)){
+    alert("Submission already received.");
+    return false;
+  }
 
+  var emailInput = form.querySelector("input[type='email']");
   if(!emailInput || !emailInput.value.trim()){
     alert("Please enter a valid email address.");
     return false;
   }
 
-  // 给 Bigo 记录 CPL 行为（非常重要）
+  /* 锁定本次提交 */
+  localStorage.setItem(CPL_LOCK_KEY, "1");
+
+  /* 触发 Bigo Pixel（仅一次） */
+  if(ENABLE_BIGOPIXEL && typeof bigo === "function"){
+    bigo('track', 'CompleteRegistration');
+  }
+
+  /* 拼接最终 Offer URL */
+  var finalUrl = OFFER_BASE_URL;
+  if(CLICK_ID){
+    finalUrl += "&aff_sub=" + encodeURIComponent(CLICK_ID);
+  }
+
+  /* 延迟跳转（保证 CPL 记录） */
   setTimeout(function(){
-    window.location.href = OFFER_URL;
+    window.location.href = finalUrl;
   }, 800);
 
   return false;
